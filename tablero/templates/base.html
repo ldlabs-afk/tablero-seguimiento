@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Tablero de seguimiento del SGSI del hogar</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+</head>
+<body>
+  <header>
+    <strong>Tablero de seguimiento – SGSI del hogar</strong>
+    <span class="entorno">Entorno: {{ config['ENTORNO'] }}</span>
+    {% if session.get('usuario') %}
+      <nav>
+        <a href="{{ url_for('paneles.indicadores') }}">Indicadores</a>
+        {% if session.get('rol') in ('dueno', 'lider') %}<a href="{{ url_for('paneles.eventos') }}">Eventos de seguridad</a>{% endif %}
+        <form method="post" action="{{ url_for('auth.logout') }}" class="en-linea">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit">Salir ({{ session['usuario'] }})</button>
+        </form>
+      </nav>
+    {% endif %}
+  </header>
+  <main>{% block contenido %}{% endblock %}</main>
+  <footer>Laboratorio académico – datos ficticios</footer>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h1>Indicadores trimestrales (fase Verificar del PHVA)</h1>
+<table>
+  <tr><th>Periodo</th><th>Indicador</th><th>Valor</th><th>Meta</th><th>Registrado por</th><th>Fecha</th></tr>
+  {% for i in indicadores %}
+  <tr><td>{{ i['periodo'] }}</td><td>{{ i['nombre'] }}</td><td>{{ i['valor'] }}</td><td>{{ i['meta'] }}</td><td>{{ i['registrado_por'] }}</td><td>{{ i['fecha_registro'] }}</td></tr>
+  {% else %}
+  <tr><td colspan="6">Sin indicadores registrados.</td></tr>
+  {% endfor %}
+</table>
+{% if session.get('rol') in ('dueno', 'lider') %}
+<h2>Registrar indicador</h2>
+<form method="post" action="{{ url_for('paneles.agregar_indicador') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>Periodo <input name="periodo" placeholder="2026-T4" required></label>
+  <label>Indicador <input name="nombre" required></label>
+  <label>Valor <input name="valor" required></label>
+  <label>Meta <input name="meta" required></label>
+  <button type="submit">Guardar</button>
+</form>
+{% endif %}
+{% endblock %}

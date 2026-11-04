@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h1>Eventos de seguridad y acciones tomadas</h1>
+<table>
+  <tr><th>#</th><th>Fecha</th><th>Tipo</th><th>Usuario</th><th>IP</th><th>Detalle</th><th>Acción tomada</th><th>Responsable</th><th>Fecha acción</th></tr>
+  {% for e in eventos %}
+  <tr>
+    <td>{{ e['id'] }}</td><td>{{ e['fecha'] }}</td><td>{{ e['tipo'] }}</td><td>{{ e['usuario'] or '' }}</td><td>{{ e['ip'] }}</td><td>{{ e['detalle'] }}</td>
+    <td>
+      {% if e['accion'] %}{{ e['accion'] }}
+      {% elif e['tipo'] == 'BLOQUEO_CUENTA' %}
+      <form method="post" action="{{ url_for('paneles.registrar_accion', evento_id=e['id']) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input name="accion" placeholder="Acción tomada" required>
+        <label><input type="checkbox" name="desbloquear" value="si"> Desbloquear cuenta</label>
+        <button type="submit">Registrar</button>
+      </form>
+      {% endif %}
+    </td>
+    <td>{{ e['responsable_accion'] or '' }}</td><td>{{ e['fecha_accion'] or '' }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
