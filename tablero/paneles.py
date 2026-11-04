@@ -25,10 +25,10 @@ def agregar_indicador():
     periodo = request.form.get("periodo", "").strip()[:20]
     nombre = request.form.get("nombre", "").strip()[:120]
     meta = request.form.get("meta", "").strip()[:60]
-    try:
-        valor = float(request.form.get("valor", ""))
-    except ValueError:
-        return render_template("error.html", mensaje="El valor debe ser numérico."), 400
+    texto_valor = request.form.get("valor", "").strip()
+    if not (texto_valor.isascii() and texto_valor.isdigit()) or len(texto_valor) > 7:
+        return render_template("error.html", mensaje="El valor debe ser un número entero entre 0 y 9999999."), 400
+    valor = int(texto_valor)
     if not periodo or not nombre or not meta:
         return render_template("error.html", mensaje="Todos los campos son obligatorios."), 400
     base = db.conexion()
